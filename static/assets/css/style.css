@@ -1,0 +1,137 @@
+body {
+  overflow-x: hidden;
+}
+
+.site-logo-resize {
+  width: 100px;
+  height: auto;
+}
+
+.filter-cell {
+  border: none;
+}
+
+.custom-filter {
+  margin-top: 75px !important;
+}
+
+th, td {
+  padding: 5px !important;
+  font-size: 12px !important;
+}
+
+th {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table-container {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.navbar img {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+
+.btn-secondary {
+  margin-top: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.table td, .table th {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.container-fluid {
+  padding-right: 0;
+  padding-left: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.custom-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+  list-style: none;
+  border-radius: .25rem;
+}
+
+.pagination .page-item {
+  margin: 0 5px;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.pagination .page-item .page-link {
+  color: #007bff;
+}
+
+.dropdown-menu {
+  width: auto;
+  min-width: 200px;
+}
+
+@media (max-width: 576px) {
+  .dropdown-menu {
+    min-width: 100px;
+  }
+}
+
+.dropdown-item {
+  font-size: 0.875rem;
+}
+
+.dropdown-menu .dropdown-item i {
+  font-size: 0.75rem;
+}
+
+.custom-img-size {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.custom-back-btn {
+  font-size: 0.875rem;
+  padding: 0.375rem 0.75rem;
+}
+
+.custom-select-width {
+  width: 150px;
+}

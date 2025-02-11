@@ -1,0 +1,10 @@
+/* admin.css */
+#result_list th, #result_list td input[type="checkbox"] {
+    width: 18px; 
+    height: 18px; 
+}
+
+#result_list th input[type="checkbox"] {
+    transform: scale(1.3);
+    margin-left: 3px;
+}

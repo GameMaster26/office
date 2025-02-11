@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: my-django-app
+    env: python
+    buildCommand: |
+      # Update and install GDAL system dependencies
+      apt-get update && apt-get install -y software-properties-common
+      add-apt-repository ppa:ubuntugis/ubuntugis-unstable -y
+      apt-get update && apt-get install -y gdal-bin libgdal-dev
+      
+      # Upgrade pip and install Python dependencies
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: gunicorn system.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: system.settings  # Replace 'my_project' with your actual project name
+      - key: GDAL_LIBRARY_PATH
+        value: /usr/lib/libgdal.so
+      - key: GEOS_LIBRARY_PATH
+        value: /usr/lib/libgeos_c.so

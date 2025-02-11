@@ -1,0 +1,16 @@
+_<!DOCTYPE html>
+<html>
+<head>
+    <title>Is this your device?</title>
+</head>
+<body>
+    <h3>Is this your device?</h3>
+    <p>Hello {{ user.username }},</p>
+    <p>We noticed a failed login attempt. If this was you, please ignore this email. If not, please click "No" below to lock your account.</p>
+
+    <p>
+        <a href="{% url 'monitoring:lock_account' %}?confirmation=yes">Yes</a>
+        <a href="{% url 'monitoring:lock_account' %}?confirmation=no">No</a>
+    </p>
+</body>
+</html>

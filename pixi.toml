@@ -1,0 +1,12 @@
+[project]
+authors = ["Raymond <raymond.corpin26@gmail.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "Monitoring-System"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+gdal = ">=3.10.1,<4"

@@ -1,0 +1,203 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohort 1st Quarter PDF</title>
+    <link href="{% static 'assets/images/seal.png' %}" rel="icon" type="image/png">
+    <style>
+        /* Report Page Container */
+        /* @page {
+            size: A4 landscape;
+            margin: 5mm;
+        } */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            width: 100%;
+            display: table;
+        }
+
+        .logo {
+            display: table-cell;
+            width: 20%;
+            vertical-align: middle;
+            text-align: left;
+        }
+
+        .logo img {
+            max-height: 120px;
+            width: auto;
+            margin-left: 20px;
+        }
+
+        .text {
+            width: 80%; /* Set the width to a reasonable size */
+            margin: 0 auto; /* Center horizontally on the page */
+            text-align: center; /* Center the text inside */
+            position: relative; /* Allow offset adjustments */
+            margin-left: -30px;
+
+        }
+
+        h1, h2, h3 {
+            margin: 5px 0; /* Adjust margins for consistent spacing */
+        }
+
+        h1 {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            font-size: 18px;
+            text-decoration: underline;
+        }
+
+        /* Styling for the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #000;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Styling for the signature section */
+        .signature-section {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .signature-line {
+            margin-top: 30px;
+            border-top: 1px solid #000;
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .signature-name {
+            display: inline-block;
+            padding-top: 10px;
+        }
+
+        .signature-title {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            {% if logo_url %}
+            <img src="{{ logo_url }}" alt="Logo">
+            {% else %}
+            <p>No logo available</p>
+            {% endif %}
+        </div>
+        <div class="text">
+            <h1>POST-EXPOSURE PROPHYLAXIS COHORT REPORT FORM</h1>
+            <h2>
+                {{ municipal }}
+            </h2>
+            <h3>
+                1st Quarter Cohort {{ karon }}
+            </h3>
+        </div>
+    </div>
+    
+    <table >
+        <thead>
+            <tr>
+                <th rowspan="2">Category of Exposure</th>
+                <th rowspan="2">No. of Registered Exposure</th>
+                <th rowspan="2">Number of Patients who received RIG</th>
+                <th colspan="4">Outcome of Post-Exposure Prophylaxis</th>
+            </tr>
+            <tr>
+                <th>Complete</th>
+                <th>Incomplete</th>
+                <th>None</th>
+                <th>Died</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Category II</td>
+                <td>{{ category_ii_count }}</td>
+                <td>{{ category_ii_with_rig }}</td>
+                <td>{{ category_ii_complete }}</td>
+                <td>{{ category_ii_incomplete }}</td>
+                <td>{{ category_ii_none }}</td>
+                <td>{{ category_ii_died }}</td>
+            </tr>
+            <tr>
+                <td>Category III</td>
+                <td>{{ category_iii_count }}</td>
+                <td>{{ category_iii_with_rig }}</td>
+                <td>{{ category_iii_complete }}</td>
+                <td>{{ category_iii_incomplete }}</td>
+                <td>{{ category_iii_none }}</td>
+                <td>{{ category_iii_died }}</td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td>{{ total_count }}</td>
+                <td>{{ total_count_rig }}</td>
+                <td>{{ total_complete }}</td>
+                <td>{{ total_incomplete }}</td>
+                <td>{{ total_none }}</td>
+                <td>{{ total_died }}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div style="display: table; width: 100%; margin-top: 30px;">
+        <div style="display: table-row;">
+            <!-- Prepared By -->
+            <div style="display: table-cell; width: 50%; text-align: center; vertical-align: top;">
+                <p style="margin: 0; font-weight: bold; text-align: left;">Prepared By:</p>
+                <div style="margin-top: 10px;">
+                    <span style="display: block; font-weight: bold; text-align: center;">{{ signature_name }}</span>
+                    <div style="border-top: 1px solid black; margin: 5px auto 0; width: 50%;"></div>
+                </div>
+                <p style="margin-top: 10px; font-size: 14px; text-align: center;">{{ coordinator }}</p>
+            </div>
+            
+            <!-- Noted By -->
+            <div style="display: table-cell; width: 50%; text-align: center; vertical-align: top;">
+                <p style="margin: 0; font-weight: bold; text-align: left;">Noted By:</p>
+                <div style="margin-top: 10px;">
+                    <span style="display: block; font-weight: bold; text-align: center;">{{ doctor }}</span>
+                    <div style="border-top: 1px solid black; margin: 5px auto 0; width: 50%;"></div>
+                </div>
+                <p style="margin-top: 10px; font-size: 14px; text-align: center;">{{ pho }}</p>
+            </div>
+        </div>
+    </div>
+    
+</div>
+</body>
+</html>

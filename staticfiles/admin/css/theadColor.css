@@ -1,0 +1,10 @@
+/* Ensure text inside all <th> in <thead> is white */
+.change-list thead th,
+.change-list thead th.sorting {
+    color: rgba(0, 0, 0, .7) !important; /* Ensures the text is white for visibility */
+}
+
+.change-list thead th a,
+.change-list thead th a:visited {
+    color: rgba(0, 0, 0, .7) !important; /* Ensures links are white */
+}

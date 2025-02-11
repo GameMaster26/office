@@ -1,0 +1,62 @@
+/* General Styles for Navbar Links */
+.links {
+    font-weight: 500;
+    color: #333 !important;
+    font-size: 15px !important;
+    margin-right: 2px !important;
+}
+.links:hover {
+    color: #007bff !important;
+    font-weight: bold;
+    border-bottom: 2px solid #007bff;
+}
+.links.active {
+    color: #007bff !important;
+    font-weight: bold;
+    border-bottom: 2px solid #007bff;
+}
+/* Admin button styles */
+.admin {
+    font-size: 18px;
+    color: #333;
+}
+/* Adjust the navbar size */
+#fixed-navbar {
+    padding: 10px 30px;
+    background-color: #fff;
+    transition: all 0.3s ease; /* Smooth transitions */
+    z-index: 1030;
+}
+/* Reduce height of the navbar */
+.navbar {
+    height: 70px;
+}
+/* Adjust the logo size */
+.navbar-brand-logo {
+    width: 50px;
+    height: 50px;
+}
+/* Adjust the font size of the brand text */
+.navbar-brand span {
+    font-size: 26px;
+    color: #007bff;
+    font-weight: bold;
+}
+/* Add margin for content below the navbar */
+body {
+    padding-top: 85px;
+    background-color: #f4f6f9;
+}
+/* Mobile styles */
+.navbar-toggler {
+    border: none;
+    outline: none;
+}
+/* Remove the default margin from the collapse menu */
+.navbar-collapse {
+    margin-top: 10px;
+}
+/* Navbar shadow on scroll */
+#fixed-navbar.scrolled {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

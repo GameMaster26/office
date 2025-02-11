@@ -1,0 +1,5 @@
+.leaflet-container, .leaflet-map-pane, .leaflet-tile-pane {
+    height: 400px !important;
+    width: 440px !important;
+}
+

@@ -1,0 +1,280 @@
+
+body {
+    padding-top: 70px;
+    background-color: #f4f6f9;
+}
+#choropleth {
+    height: 578px;
+    width: 100%;
+    position: relative;
+    z-index: 0; 
+}
+.hoverBarangay {
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+    width: 170px;
+    z-index: 1000;
+}
+.hoverBarangay h4 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+.totalPatients {
+    background-color: white;
+    padding: 10px;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid #ccc;
+    text-align: center;
+    color: #333;
+    font-weight: bolder;
+    max-width: 250px;
+}
+/* Adjust map tooltip styling */
+.leaflet-tooltip {
+    background-color: white;
+    color: black;
+    border: 2px solid #ff3333;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    font-family: Arial, sans-serif;
+}
+.leaflet-tooltip::after {
+    border-top-color: #ff3333;
+}
+
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+
+
+
+
+/* General styling */
+.bold-label {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Styling the icon */
+.icon-blue {
+    color: #007bff;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+/* General styling */
+.bold-label {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Styling the icon */
+.icon-blue {
+    color: #007bff;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.filter {
+    padding: 10px;
+}
+
+/* Filter Container */
+.filter-container {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 10px;
+    padding: 25px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    height: 100%; /* Set to fill the available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Filter Input and Select Styling */
+.form-select, #barangaySearch {
+    border: 1px solid #007bff;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    width: 200px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.form-select:hover, .form-select:focus, 
+#barangaySearch:hover, #barangaySearch:focus {
+    border-color: #66afe9;
+    background-color: #ffffff;
+    transform: scale(1.03);
+}
+
+/* Filter Button */
+.filter-btn {
+    background-color: #007bff;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-btn:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn:active {
+    transform: scale(0.98);
+}
+
+.filter-btn i {
+    margin-right: 8px;
+}
+
+[data-bs-toggle="tooltip"] {
+    cursor: pointer;
+    text-decoration: dotted;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Flex container to hold both table and info legend */
+.table-and-legend-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Adds space between the table and info legend */
+    width: 100%;
+    height: 100%;
+}
+
+/* Table and Infolegend Containers */
+.table-container {
+    
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+
+.infolegend {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    flex-shrink: 0;
+    height: auto; /* Infolegend will automatically adjust height */
+}
+
+/* Add more space between table and info legend */
+.table-and-legend-container > div:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+/* Table Styling */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0;
+    font-size: 1rem;
+}
+
+thead {
+    background-color: #0078f9;
+    color: white;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    color:black;
+}
+
+th {
+    font-weight: bold;
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.total {
+    background-color: #f1f1f1;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .table-and-legend-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .infolegend {
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .filter-container {
+        width: 100%;
+        padding: 15px;
+        height: auto;
+    }
+
+    #municipalitySelect, #barangaySearch {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    .filter-btn {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .table-container {
+        margin-left: 0;
+        overflow-x: auto;
+    }
+}

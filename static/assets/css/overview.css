@@ -1,0 +1,252 @@
+/* Body padding */
+body {
+    padding-top: 75px;
+}
+
+/* General container styles */
+#mama-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 85vh;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+#mama {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    #mama-container {
+        flex-direction: column;
+        height: 60vh;
+    }
+
+    #mama {
+        width: 100%;
+        height: 50vh;
+    }
+}
+
+@media (max-width: 480px) {
+    #mama-container {
+        height: 40vh;
+    }
+
+    #mama {
+        width: 100%;
+        height: 40vh;
+    }
+}
+
+/* Style for control panel */
+.total-cases-control {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+}
+
+/* Filter form styles */
+#filterForm {
+    width: 100%;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #007bff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#filterForm:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+#filterForm h5 {
+    color: #007bff;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* Form group label and input */
+.form-group label {
+    font-weight: 600;
+    color: #333;
+}
+
+.form-control {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Filter container styles */
+#filterContainer {
+    width: 90%;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #007bff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+}
+
+#filterContainer:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+#filterContainer h5 {
+    color: #007bff;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* Date picker styles */
+.date-class {
+    background-color: rgba(45, 45, 241, 0.7);
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.date-class:hover {
+    background-color: #0000ff;
+}
+
+/* Button inside filter form */
+.btn-primary {
+    background-color: rgba(45, 45, 241, 0.7);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0000ff;
+}
+
+/* Flexbox layout for cards */
+.row.d-flex {
+    display: flex;
+    align-items: stretch;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.muni-body, .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.chart-area {
+    width: 100%;
+    height: 100%;
+}
+
+#municipalityDownload .card-body {
+    height: calc(100% - 56px);
+}
+
+.card-footer {
+    background: none;
+    border-top: none;
+    padding: 10px;
+}
+
+/* Shrinking the download buttons */
+.btn-sm {
+    padding: 5px 10px; /* Reduce padding */
+    font-size: 0.85rem; /* Reduce font size */
+    height: 30px; /* Reduce height */
+}
+
+/* Adjust spacing between buttons */
+.card-footer .btn-sm {
+    margin-right: 5px; /* Reduce space between buttons */
+}
+
+
+/* .btn-group .btn-outline-primary {
+    padding: 5px 10px; 
+    font-size: 0.85rem; 
+    height: 30px; 
+}
+ */
+
+
+/* Adjust the size of the chart containers */
+.canvaChart {
+    margin: 0px;
+    width: 100%;
+
+}
+
+.chart-container {
+    width: 100%;
+    height: 500px; 
+}
+.canvasChart {
+    width: 100% !important;
+    height: 400px !important;
+}
+
+#municipalityChart {
+    width: 100% !important; /* Make the canvas width 100% */
+    height: 100% !important; /* Make the canvas height 100% */
+    position: absolute; /* Position it absolutely to fill the parent */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+}
+
+#downloadAllPDFs {
+    padding: 4px 8px; /* Smaller padding for a compact button */
+    font-size: 14px; /* Reduce font size */
+    line-height: 1.2; /* Adjust line height */
+    border-radius: 4px; /* Optional: Add a slight border radius */
+    display: inline-flex; /* Align the icon and text */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+}
+#downloadAllPDFs i {
+    margin-right: 4px; /* Add space between icon and text */
+    font-size: 12px; /* Reduce icon size */
+}

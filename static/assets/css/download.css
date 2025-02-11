@@ -1,0 +1,79 @@
+body {
+    padding-top: 75px ; 
+}
+
+
+
+/* Custom CSS for button width and icon size */
+.filter-button {
+    width: 100px; /* Adjust width as needed */
+    height: 35px; /* Adjust height as needed */
+    /* background-color:grey;
+    color: white; */
+}
+
+.filter-button .fas {
+    font-size: 16px; /* Adjust icon size */
+    margin-right: 8px; /* Add space between icon and text */
+}
+
+#userDropdown::after {
+    display: none !important;
+}
+
+.filter-container select, .filter-container input {
+    width: 120px;
+}
+
+.filter-container .btn {
+    width: 100px;
+}
+.searchButton{
+    height: 30px;
+}
+
+
+.wraptext td:nth-child(5),  /* Target the 4th column */
+.wraptext td:nth-child(14) { /* Target the 13th column */
+
+
+    white-space: normal; /* Allow text to wrap */
+}
+
+/* table,td,th{
+    border: 1px solid black !important;
+    
+}
+th{
+    font-size: 12px !important;
+} */
+
+.card {
+    border: none;
+}
+
+.card-body {
+    border: none;
+}
+
+.signature-section {
+    text-align: center;
+}
+
+.signature-line {
+    margin-top: 50px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid black;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.signature-name {
+    font-weight: bold;
+    margin-top: -25px;
+}
+
+.signature-title {
+    margin-top: -10px;
+}

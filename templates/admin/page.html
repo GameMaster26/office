@@ -1,0 +1,18 @@
+{% extends "admin/change_list.html" %}
+
+{% block change_list_object_tools %}
+<div style="margin-bottom: 10px;">
+    <form method="get" style="display: inline;">
+        <label for="per_page">Items per page:</label>
+        <select id="per_page" name="per_page" onchange="this.form.submit();">
+            {% for option in pagination_options %}
+                <option value="{{ option }}"
+                        {% if option == current_per_page %}selected{% endif %}>
+                    {{ option }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+{{ block.super }}
+{% endblock %}

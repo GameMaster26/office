@@ -1,0 +1,472 @@
+{% extends 'monitoring/base.html' %}
+
+{% load static %}
+
+{% block title %}
+Overview
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<!-- Leaflet Gesture Handling CSS -->
+<link rel="stylesheet" href="//unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.min.css" type="text/css">
+
+<link rel="stylesheet" href="{% static 'assets/css/overview.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+{% include 'partials/_navlink.html' %}
+<div class="col-md-3">
+    <div id="filterContainer">
+        <h5>Filter Data</h5>
+        <form id="filterForm">
+            <div class="input-group mb-3 shadow rounded">
+                <div class="input-group-text date-class" style="width: 60px; font-size: 12px;">Start</div>
+                <input type="date" class="form-control" id="startDate" name="startDate" value="{{ request.GET.startDate }}">
+            </div>
+            <div class="input-group mb-3 shadow rounded">
+                <div class="input-group-text date-class" style="width: 60px; font-size: 12px;">End</div>
+                <input type="date" class="form-control" id="endDate" name="endDate" value="{{ request.GET.endDate }}">
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" id="filterButton">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>   
+
+<div class="col-md-9 mb-4">
+            <div id="mama-container">
+                <div id="mama"></div>
+            </div>
+</div>
+{% endblock %}
+
+{% block chart %}
+<div class="container-fluid mt-2">
+    <div class="d-flex justify-content-between mb-3">
+        <div id="date-range-display" class="ms-3">
+            <!-- This will be dynamically updated with the selected date range -->
+        </div>
+        <button class="btn btn-success me-3" id="downloadAllPDFs">
+            <i class="fas fa-download "></i> Download to PDF
+        </button>
+    </div>
+    <div class="row">
+        <div class="d-flex">
+            <div class="card mb-4 col-xl-6 col-lg-6 d-flex flex-column" id="municipalityDownload">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Distribution of Municipality</h6>
+                </div>
+                <div class="card-body muni-body">
+                    <div class="chart-area">
+                        <canvas id="municipalityChart"></canvas>      
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <!-- <button class="btn btn-success btn-sm mr-2" id="downloadMunicipalityPDF" style="width: 100px;">
+                        <i class="fas fa-download"></i> PDF
+                    </button> -->
+                </div>
+            </div>
+
+            <div class="card mb-2 col-xl-6 col-lg-6 d-flex flex-column">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Distribution of Patients and Animals</h6>
+                </div>
+                <div class="card-body mt-4 mb-4 d-flex flex-column" id="scrollGender">
+                    <div class="row justify-content-center flex-grow-1">
+                        <div class="col-md-6 d-flex flex-column align-items-center border-right">
+                            <h6 class="text-center text-primary">Sex Distribution</h6>
+                            <canvas id="genderChart"></canvas>
+                        </div>
+
+                        <div class="col-md-6 d-flex flex-column align-items-center" id="scrollAnimal">
+                            <h6 class="text-center text-primary">Animal Source of Exposure</h6>
+                            <canvas id="animalChart"></canvas>
+                        </div>
+                    </div>  
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <!-- <button class="btn btn-success btn-sm mr-2" id="downloadGenderPDF" style="width: 120px;">
+                        <i class="fas fa-download"></i> Sex PDF
+                    </button>
+                    <button class="btn btn-success btn-sm mr-2" id="downloadAnimalPDF" style="width: 120px;">
+                        <i class="fas fa-download"></i> Animal PDF
+                    </button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for selecting PDF download options -->
+<div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="downloadModalLabel">Select Charts to Download</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please select the charts you want to download:</p>
+                <form id="chartSelectionForm">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="municipality" id="municipalityCheckbox">
+                        <label class="form-check-label" for="municipalityCheckbox">Municipality</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="gender" id="genderCheckbox">
+                        <label class="form-check-label" for="genderCheckbox">Gender</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="animal" id="animalCheckbox">
+                        <label class="form-check-label" for="animalCheckbox">Animal</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="all" id="allCheckbox">
+                        <label class="form-check-label" for="allCheckbox">All Charts</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmDownload">Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<hr class="mt-5 mb-5" style="color: blue;">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<!-- Pass the heatmap data to the map.js -->
+<div id="total-cases-data" data-total-cases="{{ total_cases|default:'0' }}"></div>
+<div id="total-rabies-data" data-rabies-cases="{{ total_rabies_cases|default:'0' }}"></div>
+<script id="heatmap-data" type="application/json">{{ heatmap_data|safe }}</script>
+<script id="rabies-heatmap-data" type="application/json">{{ rabies_heatmap_data|safe }}</script>
+<script>
+    window.onload = init;
+    
+    function init() {
+        const totalCasesElement = document.getElementById('total-cases-data');
+        const totalCases = parseInt(totalCasesElement.getAttribute('data-total-cases'), 10);
+        
+        const heatmapDataScript = document.getElementById('heatmap-data');
+        var heatmapData = JSON.parse(heatmapDataScript.textContent);
+        
+        // ... (rest of your map initialization code) ...
+        
+        // Handling the filter button click event
+        document.getElementById('filterButton').addEventListener('click', function() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+    
+            // Create a new form to submit the filter dates
+            const form = document.createElement('form');
+            form.method = 'GET';
+            form.action = window.location.href;
+    
+            // Add start date and end date as hidden inputs
+            const startInput = document.createElement('input');
+            startInput.type = 'hidden';
+            startInput.name = 'startDate';
+            startInput.value = startDate;
+    
+            const endInput = document.createElement('input');
+            endInput.type = 'hidden';
+            endInput.name = 'endDate';
+            endInput.value = endDate;
+    
+            form.appendChild(startInput);
+            form.appendChild(endInput);
+            document.body.appendChild(form);
+            form.submit();
+        });
+    }
+</script>
+
+<div class="container-fluid" id="monthlyCasesScroll">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between">
+            <div class="btn-group" role="group" aria-label="Download options">
+                <button type="button" class="btn btn-success" id="downloadPDF" style="width: 100px;">
+                    <i class="fas fa-download"></i> PDF
+                </button>
+            </div>
+
+            <div class="btn-group" role="group" aria-label="Chart options">
+                <button type="button" class="btn btn-outline-primary" id="showWeekly">Weekly</button>
+                <button type="button" class="btn btn-outline-primary" id="showMonthly">Monthly</button>
+                <button type="button" class="btn btn-outline-primary" id="showQuarterly">Quarterly</button>
+                <button type="button" class="btn btn-outline-primary" id="showAnnual">Annual</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row canvaChart">
+            <div class="container card mb-2 chart-container" id="monthlyCasesSection">
+                <div class="card-body">
+                    <h2 class="text-primary font-weight-bold" id="chartTitle">Monthly Cases</h2>
+                    <hr>
+                    <canvas id="monthlyCasesChart" class="canvasChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="container card mb-2 chart-container" id="weeklyCasesSection" style="display: none;">
+                <div class="card-body">
+                    <h2 class="text-primary font-weight-bold" id="chartTitle">Weekly Cases</h2>
+                    <hr>
+                    <canvas id="weeklyCasesChart" class="canvasChart"></canvas>
+                </div>
+            </div>
+
+            <div class="container card mb-2 chart-container" id="dailyCasesSection" style="display: none;">
+                <div class="card-body">
+                    <h2 class="font-weight-bold" id="chartTitle">Daily Cases</h2>
+                    <hr>
+                    <canvas id="dailyCasesChart" class="canvasChart"></canvas>
+                </div>
+            </div>
+
+            <div class="container card mb-2 chart-container" id="quarterlyCasesSection" style="display: none;">
+                <div class="card-body">
+                    <h2 class="text-primary font-weight-bold" id="chartTitle">Quarterly Cases</h2>
+                    <hr>
+                    <canvas id="quarterlyCasesChart" class="canvasChart"></canvas>
+                </div>
+            </div>
+
+            <div class="container card mb-2 chart-container" id="annualCasesSection" style="display: none;">
+                <div class="card-body">
+                    <h2 class="font-weight-bold" id="chartTitle">Annual Cases</h2>
+                    <hr>
+                    <canvas id="annualCasesChart" class="canvasChart"></canvas>
+                </div>
+            </div>
+    </div>
+</div>
+<div id="treatment-center-display" style="display: none;">
+    {{ treatment_center }}
+</div>
+<!-- Modal for Checkbox Selection -->
+<!-- <div class="modal fade" id="checkboxModal" tabindex="-1" aria-labelledby="checkboxModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkboxModalLabel">Select Options</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="checkboxForm">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="monthly" id="monthlyCheckbox" checked>
+                        <label class="form-check-label" for="monthlyCheckbox">
+                            Monthly Cases
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="weekly" id="weeklyCheckbox">
+                        <label class="form-check-label" for="weeklyCheckbox">
+                            Weekly Cases
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="daily" id="dailyCheckbox">
+                        <label class="form-check-label" for="dailyCheckbox">
+                            Daily Cases
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="quarterly" id="quarterlyCheckbox">
+                        <label class="form-check-label" for="quarterlyCheckbox">
+                            Quarterly Cases
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="annual" id="annualCheckbox">
+                        <label class="form-check-label" for="annualCheckbox">
+                            Annual Cases
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applySelection">Apply</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!-- <button id="downloadAllCharts" class="btn btn-success btn-lg rounded-circle" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <i class="fas fa-download"></i>
+</button> -->
+<!-- Modal for downloading chart options -->
+
+<div class="modal fade" id="downloadChartModal" tabindex="-1" aria-labelledby="downloadChartModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="downloadChartModalLabel">Select Chart(s) to Download</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Select the chart(s) you want to download:</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="weeklyCase" value="weekly">
+                    <label class="form-check-label" for="weeklyCase">Weekly Cases</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="monthlyCase" value="monthly">
+                    <label class="form-check-label" for="monthlyCase">Monthly Cases</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="quarterlyCase" value="quarterly">
+                    <label class="form-check-label" for="quarterlyCase">Quarterly Cases</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="annualCase" value="annual">
+                    <label class="form-check-label" for="annualCase">Annual Cases</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="allCases" value="all">
+                    <label class="form-check-label" for="allCases">All Charts</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="downloadChartBtn">Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<!-- Add this to your HTML file -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jsPDF@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@0.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+
+<!-- html2canvas and jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<!-- Leaflet Gesture Handling JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-gesture-handling/dist/leaflet-gesture-handling.js"></script>
+<!-- leaflet heat plugin -->
+<script src="{% static 'leaflet/js/leaflet-heat.js' %}"></script>
+<script src="{% static 'leaflet/js/simpleheat.js' %}"></script>
+
+<script src="{% static 'assets/js/map.js' %}"></script>
+<script src="{% static 'assets/js/overviewDistribution.js' %}"></script>
+<script src="{% static 'assets/js/overviewAll.js' %}"></script>
+<script src="{% static 'assets/js/overviewMonthly.js' %}"></script>
+<script src="{% static 'assets/js/monthlymodal.js' %}"></script>
+<script src="{% static 'assets/js/dateDisplay.js' %}"></script>
+
+
+<script>
+    // Pass data to the external script
+    const municipalities = {{ municipalities|safe }};
+    const municipalityCaseCounts = {{ municipality_case_counts|safe }};
+    const genderLabels = {{ gen|safe }};
+    const genderData = {{ dataGender|safe }};
+    const animalLabels = {{ animal|safe }};
+    const animalData = {{ dataAnimal|safe }};
+    const username = "{{ username }}";
+    const fname = "{{ fname }}";
+    const lname = "{{ lname }}";
+    const municipality = "{{ municipality }}";
+
+
+    
+    // Initialize charts
+    initMunicipalityChart(municipalities, municipalityCaseCounts);
+    initGenderChart(genderLabels, genderData);
+    initAnimalChart(animalLabels, animalData);
+</script>
+
+<script>
+    // Pass data to the external script
+    const days = {{ days|safe }};
+    const daily_case_counts = {{ daily_case_counts|safe }};
+    const weeks = {{ weeks|safe }};
+    const weekly_case_counts = {{ weekly_case_counts|safe }};
+    const months = {{ months|safe }};
+    const case_counts = {{ case_counts|safe }};
+
+    const quarters = {{ quarters|safe }};
+    const quarterly_case_counts = {{ quarterly_case_counts|safe }};
+    const years = {{ years|safe }};
+    const annual_case_counts = {{ annual_case_counts|safe }};
+    const treatment_center = "{{ treatment_center }}";
+    
+    
+    // Initialize charts
+    initDailyChart(days, daily_case_counts);
+    initWeeklyChart(weeks, weekly_case_counts);
+    initMonthlyChart(months, case_counts);
+    initQuarterlyChart(quarters, quarterly_case_counts);
+    initAnnualChart(years, annual_case_counts);
+</script>
+
+<script>
+    /* document.getElementById('showDaily').addEventListener('click', function() {
+            document.getElementById('dailyCasesSection').style.display = 'block';
+            document.getElementById('weeklyCasesSection').style.display = 'none';
+            document.getElementById('monthlyCasesSection').style.display = 'none';
+            document.getElementById('quarterlyCasesSection').style.display = 'none';
+            document.getElementById('annualCasesSection').style.display = 'none';
+        });
+        */
+        document.getElementById('showWeekly').addEventListener('click', function() {
+            /* document.getElementById('dailyCasesSection').style.display = 'none'; */
+            document.getElementById('weeklyCasesSection').style.display = 'block';
+            document.getElementById('monthlyCasesSection').style.display = 'none';
+            document.getElementById('quarterlyCasesSection').style.display = 'none';
+            document.getElementById('annualCasesSection').style.display = 'none';
+        });
+
+        document.getElementById('showMonthly').addEventListener('click', function() {
+            /* document.getElementById('dailyCasesSection').style.display = 'none'; */
+            document.getElementById('weeklyCasesSection').style.display = 'none';
+            document.getElementById('monthlyCasesSection').style.display = 'block';
+            document.getElementById('quarterlyCasesSection').style.display = 'none';
+            document.getElementById('annualCasesSection').style.display = 'none';
+        });
+
+        document.getElementById('showQuarterly').addEventListener('click', function() {
+            /* document.getElementById('dailyCasesSection').style.display = 'none'; */
+            document.getElementById('weeklyCasesSection').style.display = 'none';
+            document.getElementById('monthlyCasesSection').style.display = 'none';
+            document.getElementById('quarterlyCasesSection').style.display = 'block';
+            document.getElementById('annualCasesSection').style.display = 'none';
+        });
+
+        document.getElementById('showAnnual').addEventListener('click', function() {
+            /* document.getElementById('dailyCasesSection').style.display = 'none'; */
+            document.getElementById('weeklyCasesSection').style.display = 'none';
+            document.getElementById('monthlyCasesSection').style.display = 'none';
+            document.getElementById('quarterlyCasesSection').style.display = 'none';
+            document.getElementById('annualCasesSection').style.display = 'block';
+        });
+</script>
+{% endblock %}

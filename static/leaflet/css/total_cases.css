@@ -1,0 +1,30 @@
+/* Adjust the total cases display on smaller screens */
+@media (max-width: 600px) {
+    .total-cases-control {
+        font-size: 12px; /* Smaller text size */
+        padding: 5px; /* Smaller padding */
+    }
+    .total-cases-control h2 {
+        font-size: 16px; /* Adjust the total cases number size */
+    }
+    .total-cases-control h4 {
+        font-size: 12px; /* Adjust the 'Total Patients' text size */
+    }
+}
+
+/* Make the layers control smaller on mobile */
+@media (max-width: 600px) {
+    .leaflet-control-layers {
+        font-size: 12px; /* Adjust text size */
+        width: 120px; /* Reduce width for smaller devices */
+    }
+}
+
+/* Move zoom control for mobile screen */
+@media (max-width: 600px) {
+    .leaflet-control-zoom {
+        position: absolute;
+        bottom: 10px; /* Move zoom control lower */
+        right: 10px; /* Make sure it fits on smaller screens */
+    }
+}

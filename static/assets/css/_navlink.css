@@ -1,0 +1,40 @@
+
+.links {
+    font-weight: 500;
+    color: #333 !important;
+    font-size: 15px !important;
+    margin-right: 2px !important;
+}
+.links:hover {
+    color: #007bff !important;
+    font-weight: bold;
+    border-bottom: 2px solid #007bff;
+}
+.links.active {
+    color: #007bff !important;
+    font-weight: bold;
+    border-bottom: 2px solid #007bff;
+}
+.admin {
+    font-size: 18px !important;
+    color: black !important;
+}
+.dropdown-menu {
+    z-index: 1050;
+}
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent background */
+    height: 70px;
+    transition: background-color 0.3s ease-in-out; /* Smooth transition */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    z-index: 1030;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+/* Fix the navbar to the top of the page */
+.fixed-top {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+}

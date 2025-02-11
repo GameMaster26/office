@@ -1,0 +1,122 @@
+body {
+    padding-top: 75px ; 
+}
+table{
+    margin-top: 10px !important;
+    height:40% !important;
+    border: 1px black solid !important;
+}
+th{
+    font-size: 15px !important;
+    border: 1px black solid !important;
+}
+td{
+    font-size: 12px !important;
+    border: 1px black solid !important;
+}   
+
+
+
+
+
+
+.text-end a {
+    transition: background-color 0.3s, transform 0.3s;
+    font-size: 0.875rem; /* Slightly smaller font */
+    padding: 0.25rem 0.5rem; /* Reduced padding */
+}
+
+.text-end a:hover {
+    transform: scale(1.05);
+}
+
+.text-end .btn-danger {
+    background-color: #dc3545; /* Red color */
+    border: none;
+    padding: 0.25rem 0.5rem; /* Reduced padding */
+    font-size: 0.875rem; /* Slightly smaller font */
+}
+
+.input-group-text {
+    background-color: #007bff; /* Button color */
+    color: white; /* Icon color */
+    border: none; /* Remove border */
+    border-radius: 0; /* Match dropdown's border */
+}
+
+.input-group-text i {
+    font-size: 1.2rem; /* Icon size */
+}
+
+
+
+.quarter {
+    margin-left: 200px;
+}
+
+.input-group {
+    max-width: 300px; /* Adjust width as needed */
+    margin: 0 auto; /* Center the dropdown */
+}
+
+.select-width {
+    max-width: 220px; /* Set the maximum width for the select dropdown */
+}
+
+.form-select {
+    width: 100%; /* Make the select fill the width of its parent */
+    border-radius: 0.375rem; /* Rounded corners */
+    border: 1px solid #ced4da; /* Custom border color */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Smooth transition */
+}
+
+.form-select:focus {
+    border-color: #007bff; /* Highlight on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); /* Focus shadow */
+}
+
+
+
+.signature-section {
+    margin-top: 3rem;
+}
+.signatures {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+.prepared,
+.noted {
+    width: 45%; /* Control the width of each section */
+    text-align: center;
+    position: relative;
+}
+.label {
+    font-weight: bold;
+    margin: 0;
+    text-align: left;
+    position: absolute;
+    left: 0;
+}
+.signature-line {
+    margin-top: 1rem;
+    text-align: center;
+    position: relative;
+}
+.signature-name {
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+.line {
+    width: 50%; /* Adjust underline width */
+    height: 1px;
+    background-color: #000;
+    margin: 0 auto;
+}
+.signature-title {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #333;
+}

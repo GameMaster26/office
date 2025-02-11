@@ -1,0 +1,101 @@
+{% load static %}
+
+<!-- Navbar HTML -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-lg fixed-top" id="fixed-navbar">
+    <div class="container-fluid">
+        <!-- Logo and Title -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{% static 'assets/images/3.jpeg' %}" alt="Logo" class="rounded-circle" style="width: 40px; height: 40px;">
+            <span class="text-primary ms-2" style="font-size: 24px;"><i>ABRMS-GEO Mapping</i></span>
+        </a>
+
+        <!-- Toggler button for mobile view -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links and items -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Centered Navbar Links (for larger screens) -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-primary custom-hover {% if request.path == '/admin/overview/' %}active{% endif %}" href="{% url 'overview' %}">Overview</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary custom-hover {% if request.path == '/admin/overview/choropleth_map/' %}active{% endif %}" href="{% url 'choro' %}">Choropleth Map</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary custom-hover {% if request.path == '/admin/overview/tables/' %}active{% endif %}" href="{% url 'tables' %}">Table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary custom-hover {% if request.path == '/admin/overview/reports/' %}active{% endif %}" href="{% url 'reports' %}">Report</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary custom-hover {% if request.path == '/admin/overview/cohort/' %}active{% endif %}" href="{% url 'cohort' %}">Cohort</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary custom-hover {% if request.resolver_match.url_name == 'download' %}active{% endif %}" href="{% url 'download' %}">Master List</a>
+                </li>
+            </ul>
+
+            <!-- User Profile and Dropdown (Aligned Right) -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="d-none d-lg-inline me-2" style="font-size: 16px; color: rgb(38, 38, 72);">
+                            {% if request.user.is_superuser %}
+                                admin
+                            {% else %}
+                                {{ request.user.username }}
+                            {% endif %}
+                        </span>
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/admin/"><i class="fas fa-arrow-left fa-sm fa-fw text-gray-400"></i> Back</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'monitoring:logout' %}"><i class="fas fa-door-open fa-sm fa-fw text-gray-400"></i> Logout</a></li>
+                    </ul>
+                </li>                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Custom CSS -->
+<style>
+    @media (max-width: 991px) {
+        .navbar-nav {
+            text-align: right; /* Align navbar items to the right */
+        }
+        .fa-user {
+            text-align: right; /* Align navbar items to the right */
+        }
+        .navbar-toggler-icon {
+            background-color: white; /* Make the toggle icon visible against the red background */
+        }
+        .dropdown-menu {
+            background-color: white !important; /* Set red background for mobile view */
+            text-align: right; /* Align navbar items to the right */
+        }
+
+    }
+    /* Initial color is black */
+    .nav-link.custom-hover {
+        color: black !important;
+        text-decoration: none;
+    }
+
+
+    .nav-link.custom-hover:hover {
+        text-decoration: underline;
+    }
+
+    /* Active link: blue color */
+    .nav-link.active {
+        color: #007bff !important; /* Blue color when active */
+        text-decoration: underline;
+    }
+
+</style>

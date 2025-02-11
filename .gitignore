@@ -1,0 +1,14 @@
+# Ignore the virtual environment
+/tez/
+
+# Ignore Python bytecode files
+*.pyc
+__pycache__/
+
+# Ignore Django's SQLite database file (if used)
+db.sqlite3
+
+
+# pixi environments
+.pixi
+*.egg-info

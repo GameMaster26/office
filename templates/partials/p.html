@@ -1,0 +1,128 @@
+{% load static %}
+
+
+<nav class="navbar navbar-expand navbar-light bg-white mb-4 topbar fixed-top " id="fixed-navbar"><!-- fixed-top static-top -->
+    <img src="{% static 'assets/images/3.jpeg' %}" alt="Logo" class="rounded-circle mr-4" id="responsive-image" style="width: 55px; height: 55px;">
+    <span class="text-primary font-weight-bold d-inline-block d-md-inline col-sm-8 col-lg-9 col-md-8" id="responsive-text">Animal Bite and Rabies Monitoring System with GEO Mapping</span>
+    <!-- Topbar Navbar -->
+    <ul class="navbar-nav ml-auto">
+        <div class="topbar-divider d-none d-sm-block"></div>
+        <li class="nav-item no-arrow">
+            <a class="nav-link m-3" href="{% url 'monitoring:admin_redirect' %}" id="home-admin">
+                <span class="mr-2   text-gray-600">Login</span>
+                <i class="fas fa-user " id="home-icon-admin"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+<style>
+    #fixed-navbar {
+    padding: 10px 20px; /* Adds some padding inside the navbar */
+    margin-bottom:  1000px; /* Adds margin on the left and right to prevent the navbar from sticking to the edges */
+    z-index: 1030; /* Ensure the navbar stays above other elements */
+}
+</style>
+
+{% load static %}
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-lg pb-2 fixed-top " id="fixed-navbar">
+        <!-- ABRMS-GEO Mapping on the left -->
+        <div class="d-flex align-items-center">
+            <img src="{% static 'assets/images/3.jpeg' %}" alt="Logo" class="rounded-circle navbar-brand-logo ms-2" style="width: 50px; height: 50px;">
+            <span class="text-primary font-weight-bold ms-2" style="font-size: 30px;">ABRMS-GEO Mapping</span>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar content: centered links and admin on the right -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Centered Navigation Links -->
+            <div class="mx-auto">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link links {% if request.path == '/overview/' %}active{% endif %}" href="/overview/">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link links {% if request.path == '/overview/choropleth_map/' %}active{% endif %}" href="/overview/choropleth_map">Choropleth Map</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link links {% if request.path == '/overview/reports/' %}active{% endif %}" href="/overview/reports/">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link links {% if request.path == '/overview/tables/' %}active{% endif %}" href="/overview/tables/">Tables</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link links {% if request.path == '/overview/download/' %}active{% endif %}" href="/overview/download/">Download</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Admin dropdown on the right -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline admin" id="download-admin" >
+                            {% if request.user.is_superuser %}
+                                admin
+                            {% else %}
+                            <span style="font-size: 16px; color: rgb(38, 38, 72);" >{{ request.user.username }}</span> 
+                            {% endif %}
+                        </span>
+                        <i class="fas fa-user" id="download-icon-admin"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/admin/"><i class="fas fa-arrow-left fa-sm fa-fw mr-2 text-gray-400"></i> Back</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'monitoring:logout' %}"><i class="fas fa-door-open fa-sm fa-fw mr-2 text-gray-400"></i> Logout</a></li>
+                    </ul>
+                </li>                
+            </ul>
+
+        </div>
+    </nav>
+<style>
+    .links {
+        font-weight: 500 !important;
+        color: rgb(56, 56, 56) !important;
+        font-size: 15px !important;
+        margin-right: 2px !important;
+    }
+
+    .links:hover {
+        color: #007bff !important; /* Blue color for hover */
+        font-weight: bold;
+        border-bottom: 2px solid #007bff; /* Underline effect */
+    }
+
+    /* Active state */
+    .links.active {
+        color: #007bff !important; /* Blue color for active link */
+        font-weight: bold;
+        border-bottom: 2px solid #007bff; /* Underline effect for active link */
+    }
+
+    .admin {
+        font-size: 18px !important;
+        color: black !important;
+    }
+
+    .dropdown-menu {
+        z-index: 1050; /* Ensure the dropdown is above other elements */
+    }
+
+    /* Example CSS for Navbar */
+    
+    
+    #fixed-navbar {
+        padding: 10px 20px; /* Adds some padding inside the navbar */
+        margin-bottom:  1000px; /* Adds margin on the left and right to prevent the navbar from sticking to the edges */
+        z-index: 1030; /* Ensure the navbar stays above other elements */
+    }
+
+    /* Add some top margin to the content below the navbar */
+    body {
+        padding-top: 80px; /* Adjust this value to the height of your navbar */
+    }
+</style>

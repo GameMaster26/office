@@ -1,0 +1,100 @@
+body {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Ensure the wrapper is full height */
+/* .wrapper {
+    width: 100%;
+    height: 100%;
+}
+ */
+#custom_nav{
+    height: 70px;
+}
+
+/* Base styles for mama-container */
+#mama-container {
+    width: 100%;
+    height: 80%; /* Adjust height as needed */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
+/* Ensure mama fits inside mama-container */
+#mama {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Add some padding or margin if necessary */
+.container-fluid.card {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Adjustments for larger screens */
+@media (min-width: 769px) {
+    #mama-container {
+        height: 80vh; /* Larger height for desktops */
+    }
+
+    #mama {
+        height: 100%; /* Larger height for desktops */
+
+        margin: auto; /* Center the map horizontally */
+    }
+}
+
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    #mama-container {
+        height: 50vh; /* Smaller height for tablets and below, adjust as needed */
+    }
+
+    #mama {
+        height: 50vh; /* Smaller height for tablets and below, adjust as needed */
+    }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+    #mama-container {
+        height: 30vh; /* Smaller height for mobile devices, adjust as needed */
+    }
+
+    #mama {
+        height: 30vh; /* Smaller height for mobile devices, adjust as needed */
+    }
+}
+.text-center{
+    color:rgba(0, 0, 255, 0.6)
+}
+
+
+#genderChart, #animalChart {
+    width: 100%;
+    max-width: 250px; /* Adjust max-width to control the canvas size */
+    height: 250px !important;
+}
+
+ /* Optional: Additional styling for the card */
+ a .card {
+    transition: transform 0.2s;
+}
+
+a:hover .card {
+    transform: scale(1.05);
+}
+
+#home-admin{
+    font-size: 18px; /* Adjust the size as per your requirement */
+    color: #6c757d; /* Adjust the color if needed */
+}
+#home-icon-admin{
+    color: #6c757d;
+}
+
+

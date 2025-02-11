@@ -1,0 +1,41 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'assets/css/navlink.css' %}">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-lg fixed-top" id="fixed-navbar">
+    <div class="container-fluid">
+        <!-- Logo and Title -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{% static 'assets/images/3.jpeg' %}" alt="Logo" class="rounded-circle navbar-brand-logo ms-2" style="width: 50px; height: 50px;">
+            <span class="text-primary font-weight-bold ms-2" style="font-size: 24px; margin-left: 10px;">Animal Bite and Rabies Monitoring System-GEO Mapping</span>
+        </a>
+
+        <!-- Toggler button for mobile view -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links and items -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link links {% if request.path == '/' %}active{% endif %}" href="/">Overview</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link links {% if request.path == '/choropleth_map/' %}active{% endif %}" href="/choropleth_map">Choropleth Map</a>
+                </li>
+            </ul>
+
+            <!-- Admin dropdown on the right -->
+            <ul class="navbar-nav ms-auto">
+                <div class="topbar-divider d-none d-sm-block"></div>
+                <li class="nav-item no-arrow">
+                    <a class="nav-link m-3" href="{% url 'monitoring:admin_redirect' %}" id="home-admin">
+                        <span class="mr-2 text-gray-600">Login</span>
+                        <i class="fas fa-user" id="home-icon-admin"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

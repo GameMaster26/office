@@ -1,0 +1,294 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report PDF</title>
+    <link href="{% static 'assets/images/seal.png' %}" rel="icon" type="image/png">
+    
+    <style>
+
+
+        body {
+            font-family: Arial, sans-serif; /* Common font for better compatibility */
+            margin: 0; /* Remove default margin */
+            padding: 0;
+        }
+
+        .title-text {
+            /* color: blue;  */
+            text-align: center; /* Center align the text */
+            font-weight: 300;
+            font-size: 30px;
+            margin-bottom: 50px;
+            padding: 0; /* Ensure no extra spacing */
+        }
+
+        /* Style for the reporting period container */
+        .reporting-period {
+            display: flex; /* Use flexbox to arrange items in a row */
+            justify-content: flex-start; /* Aligns items to the left, allowing space between */
+            align-items: center; /* Vertically center the content */
+            width: 100%; /* Ensure it stretches to the full width of the container */
+            margin-bottom: 10px;
+        }
+
+        /* Style for the reporting period span */
+        #reportingPeriod {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center; /* Align the text to the left */
+            
+            padding: 0; /* Ensure no extra spacing */
+        }
+
+        /* Style for the summary stats */
+        .summary-stats {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap if needed */
+            gap: 15px; /* Space between each summary item */
+            justify-content: flex-end; /* Align the summary stats to the right */
+            margin-left: 10px; /* Add margin to the left of the summary stats */
+        }
+
+        /* Style for each summary item label (like "Total patients:") */
+        .summary-item {
+            font-weight: bold;
+            margin-right: 5px; /* Space between label and value */
+            font-size: 14px;
+        }
+
+        /* Style for each summary value */
+        .summary-value {
+            font-weight: normal;
+            font-size: 16px;
+            color: red; /* Make the summary values red */
+        }
+
+
+        .custom-center {
+            text-align: center; /* Center the text */
+        }
+
+        .custom-h1 {
+            font-size: 20px; /* Equivalent to Bootstrap's h1 */
+            margin: 10px 0 5px; /* Adjust top and bottom margin */
+        }
+
+        .custom-h2 {
+            font-size: 18px; /* Equivalent to Bootstrap's h2 */
+            margin: 0; /* Remove default margins */
+        }
+
+        .custom-h3 {
+            font-size: 18px; /* Equivalent to Bootstrap's h3 */
+            margin: 0; /* Remove default margins */
+        }
+        .quarter {
+            margin: 0 auto; /* Center the div in its container */
+            padding: 0; /* Remove any default padding */
+        }
+        
+        table {
+            width: 100%; /* Ensure table takes full width */
+            border-collapse: collapse; /* Cleaner borders */
+            table-layout: fixed; /* Fix column sizes */
+            page-break-after: auto;
+        }
+        tfoot {
+    page-break-before: always;  /* Force a page break before the footer */
+}
+
+footer {
+    page-break-before: always;
+}
+
+footer, .container {
+    margin-top: 30px;
+}
+
+/* Ensuring the table doesn't overflow to the next page */
+table, tr, td, th {
+    page-break-inside: avoid;
+}
+
+        th, td {
+            border: 1px solid black; /* Visible borders */
+            padding: 3px; /* Reduce padding for space */
+            font-size: 10px; /* Smaller font size */
+            text-align: center; /* Center-align text */
+            word-wrap: break-word; /* Ensure long text wraps */
+        }
+
+        th[colspan="6"], td[colspan="6"] {
+            width: 36%; /* Increase space for "Post Exposure Treatment" */
+        }
+
+        th, td:nth-child(1) { width: 6%; } /* Registration No. */
+        th, td:nth-child(2) { width: 10%; } /* Registration Date */
+        th, td:nth-child(3) { width: 8%; } /* First Name */
+        th, td:nth-child(4) { width: 8%; } /* Last Name */
+        th, td:nth-child(5) { width: 8%; } /* Barangay */
+        th, td:nth-child(6) { width: 8%; } /* Municipality */
+        th, td:nth-child(7), td:nth-child(8) { width: 5%; } /* Age ≤15, ≥15 */
+        th, td:nth-child(9) { width: 5%; } /* Sex */
+        th, td:nth-child(10) { width: 10%; } /* Date of Exposure */
+        th, td:nth-child(11) { width: 8%; } /* Biting Animal */
+        th, td:nth-child(12) { width: 10%; } /* Status of Animal */
+        th, td:nth-child(13) { width: 10%; } /* Category of Bite */
+        th, td:nth-child(14) { width: 12%; } /* Anatomical Location */
+        th, td:nth-child(15) { width: 10%; } /* Animal Vaccination */
+        th, td:nth-child(16) { width: 10%; } /* Date of Birth */
+        
+        </style>
+</head>
+<body>
+    <div class="container">                   
+        <h4 class="title-text">BILIRAN PROVINCIAL HOSPITAL <br>ANIMAL BITE TREATMENT CENTER</h4>
+        <div style="display: table; width: 100%; border-collapse: collapse;">
+            <div style="display: table-row;">
+                <!-- Left section for Reporting Period -->
+                <div style="display: table-cell; width: 30%; text-align: left; vertical-align: top; padding: 10px; font-weight:600; font-size: 12px; margin-left: 20px;">
+                    {% if start_month and end_month %}
+                        Reporting Period: {{ start_month }} to {{ end_month }} {{ karon }}
+                    {% elif start_month %}
+                        Reporting Period: {{ start_month }} {{ karon }}
+                    {% elif end_month %}
+                        Reporting Period: {{ end_month }} {{ karon }}
+                    {% else %}
+                        Reporting Period: All {{ karon }}
+                    {% endif %}
+                </div>
+        
+                <!-- Right section for Total Patients and related data -->
+                <div style="display: table-cell; width: 70%; text-align: right; vertical-align: top; padding: 10px;font-size: 12px; ">
+                    <div style="display: block;">
+                        <div style="display: inline-block; margin-right: 20px;">
+                            <strong>Total patients: </strong>
+                            <span style="color: red;">{{ total_patients }}</span>
+                        </div>
+                        <div style="display: inline-block; margin-right: 20px;">
+                            <strong>Male:</strong>
+                            <span style="color: red;">{{ male }}</span>
+                        </div>
+                        <div style="display: inline-block; margin-right: 20px;">
+                            <strong>Female:</strong>
+                            <span style="color: red;">{{ female }}</span>
+                        </div>
+                        <div style="display: inline-block; margin-right: 20px;">
+                            <strong>Dog:</strong>
+                            <span style="color: red;">{{ dog_count }}</span>
+                        </div>
+                        <div style="display: inline-block; margin-right: 20px;">
+                            <strong>Cat:</strong>
+                            <span style="color: red;">{{ cat_count }}</span>
+                        </div>
+                        <div style="display: inline-block; margin-right: 20px;">
+                            <strong>Other:</strong>
+                            <span style="color: red;">{{ other_animal_count }}</span>
+                        </div>
+                        <div style="display: inline-block; margin-right: 20px;">
+                            <strong>15 and Below:</strong>
+                            <span style="color: red;">{{ age_15_or_less_count }}</span>
+                        </div>
+                        <div style="display: inline-block;">
+                            <strong>Above 15:</strong>
+                            <span style="color: red;">{{ age_above_15_count }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div id="table-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2"     >Registration No.</th>
+                        <th rowspan="2"     >Registration Date</th>
+                        <th rowspan="2">First Name</th>
+                        <th rowspan="2">Last Name</th>
+                        <th rowspan="2"     >Barangay</th>
+                        <th rowspan="2" >Municipality</th>
+                        <th colspan="2">Age</th> 
+                        <th rowspan="2">Sex</th>
+                        <th rowspan="2"     >Date of Exposure</th>
+                        <th rowspan="2" >Biting Animal</th>
+                        <th rowspan="2"     >Status of Biting Animal</th>
+                        <th rowspan="2"     >Category of Bite</th>
+                        <th rowspan="2"     >Anatomical Location</th>
+                        <th rowspan="2" >Animal Vaccination</th>
+                        <th rowspan="2">Date of Birth</th>
+                        <th colspan="6">Post Exposure Treatment</th>
+                    </tr>
+                    <tr>
+                                <th>≤15</th>
+                                <th>≥15</th>
+                                <th>D0</th>
+                                <th>D3</th>
+                                <th>D7</th>
+                                <th>D28</th>
+                                <th>ERIG</th>
+                                <th>HRIG</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for history in histories %}
+                    <tr>
+                                <td     >{{ history.registration_no }}</td>
+                                <td     >{{ history.date_registered }}</td>
+                                <td>{{ history.patient_id.first_name }}</td>
+                                <td>{{ history.patient_id.last_name }}</td>
+                                <td     >{{ history.brgy_id.brgy_name }}</td>
+                                <td     >{{ history.muni_id.muni_name }}</td>
+                                <td>{% if history.age <= 15 %}{{ history.age }}{% endif %}</td>
+                                <td>{% if history.age > 15 %}{{ history.age }}{% endif %}</td>
+                                <td>{{ history.patient_id.sex }}</td>
+                                <td     >{{ history.date_of_exposure }}</td>
+                                <td >{{ history.source_of_exposure }}</td>
+                                <td     >{{ history.status_of_animal }}</td>
+                                <td     >{{ history.category_of_exposure }}</td>
+                                <td     >{{ history.bite_site }}</td>
+                                <td >{{ history.immunization_status }}</td>
+                                <td>{{ history.patient_id.birthday }}</td>                                                             
+                                <td>{{ history.treatment.day0 }}</td>
+                                <td>{{ history.treatment.day3 }}</td>
+                                <td>{{ history.treatment.day7 }}</td>
+                                <td>{{ history.treatment.day28 }}</td>
+                                <td>{{ history.treatment.rig_given }}</td>
+                                <td>{{ history.treatment.hrig }}</td>
+                    </tr>   
+                    {% endfor %}
+                            
+                </tbody>
+            </table>
+        </div>
+        <div style="display: table; width: 100%; margin-top: 30px;">
+            <div style="display: table-row;">
+                <!-- Prepared By -->
+                <div style="display: table-cell; width: 50%; text-align: center; vertical-align: top;">
+                    <p style="margin: 0; font-weight: bold; text-align: left;">Prepared By:</p>
+                    <div style="margin-top: 10px;">
+                        <span style="display: block; font-weight: bold; text-align: center;">{{ signature_name }}</span>
+                        <div style="border-top: 1px solid black; margin: 5px auto 0; width: 50%;"></div>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 14px; text-align: center;">{{ coordinator }}</p>
+                </div>
+                
+                <!-- Noted By -->
+                <div style="display: table-cell; width: 50%; text-align: center; vertical-align: top;">
+                    <p style="margin: 0; font-weight: bold; text-align: left;">Noted By:</p>
+                    <div style="margin-top: 10px;">
+                        <span style="display: block; font-weight: bold; text-align: center;">{{ doctor }}</span>
+                        <div style="border-top: 1px solid black; margin: 5px auto 0; width: 50%;"></div>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 14px; text-align: center;">{{ pho }}</p>
+                </div>
+            </div>
+        </div>    
+    </div>       
+</body>
+</html>

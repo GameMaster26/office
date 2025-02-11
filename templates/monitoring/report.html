@@ -1,0 +1,255 @@
+{% extends 'monitoring/base.html' %}
+
+{% load static %}
+
+{% block title %}
+Report
+
+{% endblock %}
+    
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'assets/css/report.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% include 'partials/_navlink.html' %}
+
+    <div class="text-end mb-4 me-5">
+        {% if selected_quarter == '1' %}
+            <a href="{% url 'monitoring:download_report_pdf' %}" target="_blank" class="btn btn-success me-2" style="width: 100px;">
+                <i class="fas fa-download me-2"></i> PDF
+            </a>
+        {% elif selected_quarter == '2' %}
+            <a href="{% url 'monitoring:download_report_pdf2' %}" target="_blank" class="btn btn-success me-2" style="width: 100px;">
+                <i class="fas fa-download me-2"></i> PDF
+            </a>
+        {% elif selected_quarter == '3' %}
+            <a href="{% url 'monitoring:download_report_pdf3' %}" target="_blank" class="btn btn-success me-2" style="width: 100px;">
+                <i class="fas fa-download me-2"></i> PDF
+            </a>
+        {% elif selected_quarter == '4' %}
+            <a href="{% url 'monitoring:download_report_pdf4' %}" target="_blank" class="btn btn-success me-2" style="width: 100px;">
+                <i class="fas fa-download me-2"></i> PDF
+            </a>
+        {% elif selected_quarter == 'annual' %}
+            <a href="{% url 'monitoring:download_report_pdf_annual' %}" target="_blank" class="btn btn-success me-2" style="width: 100px;">
+                <i class="fas fa-download me-2"></i> PDF
+            </a>
+        {% endif %}
+    </div>
+
+
+    <form method="get" class="form-group mb-4 ms-5">
+        <div class="mb-3 text-center">
+            <!-- <label for="quarter" class="form-label">Select Quarter:</label> -->
+            <div class="input-group justify-content-center select-width">
+                <select name="quarter" id="quarter" class="form-select"   onchange="this.form.submit()">
+                    <option value="1" {% if selected_quarter == '1' %}selected{% endif %}>1st Quarter</option>
+                    <option value="2" {% if selected_quarter == '2' %}selected{% endif %}>2nd Quarter</option>
+                    <option value="3" {% if selected_quarter == '3' %}selected{% endif %}>3rd Quarter</option>
+                    <option value="4" {% if selected_quarter == '4' %}selected{% endif %}>4th Quarter</option>
+                    <option value="annual" {% if selected_quarter == 'annual' %}selected{% endif %}>Annual</option>
+                </select>
+                <span class="input-group-text"><i class="bi bi-calendar2-check"></i></span>
+            </div>
+        </div>
+    </form>
+
+    <div class="container mt-4 mb-4">
+        <div class="d-flex justify-content-start align-items-start mb-4"> <!-- Logo on the left, text centered -->
+            <div class="d-flex align-items-center">
+                {% if logo_url  %}
+                    <img src="{{ logo_url }}" alt="Logo" style="height: 120px; margin-right: 20px; margin-left: 20px;">
+                {% else %}
+                    <p>No logo available</p>
+                {% endif %}
+            </div>
+
+            <!-- Adjusted the text container to be centered -->
+            <div class="text-center mx-auto" style="flex-grow: 1;"> 
+                <h1 class="h1">MUNICIPAL REPORT FORM ON ANIMAL BITE/HUMAN RABIES CASES</h1>
+                {% if user.is_superuser %}
+                    <h2 class="h2" style="margin-top:10px;">Province of Biliran</h2>
+                {% else %}
+                    <h2 class="h2" style="margin-top:10px;">Municipality of {{ municipality_name }}</h2>
+                {% endif %}
+                <h3 class="h3" style="margin-top:10px;">
+                    <u>
+                        {{ report_title }}
+                    </u>
+                </h3>
+            </div>
+        </div>
+        <!-- Table area -->
+        <table class="" border="2">
+            <thead>
+                <tr>
+                    <th rowspan="4" >{{ table }}</th>
+                    <th colspan="15">Human Case</th>
+                    <th colspan="4" rowspan="3">Biting Animals</th>
+                    <th colspan="2" rowspan="3">PEP Coverage</th>
+                    <th colspan="2" rowspan="3">Vaccination Status of Biting Animal</th>
+                </tr>
+                <tr>
+                    <th colspan="3" rowspan="2">SEX</th>
+                    <th colspan="3" rowspan="2">AGE</th>
+                    <th colspan="5">Animal Bite</th>
+                    <th rowspan="2">HR</th>
+                    <th colspan="3" rowspan="2">Post Exposure Prophylaxis</th>
+                </tr>
+                <tr>
+                    <th colspan="3">By Category</th>
+                    <th rowspan="2">Total</th>
+                    <th rowspan="2">%/Total</th>
+                </tr>
+                <tr>
+                    <th>M</th>
+                    <th>F</th>
+                    <th>Total</th>
+                    <th>&lt;=15</th>
+                    <th>&gt;15</th>
+                    <th>Total</th>
+                    <th>I</th>
+                    <th>II</th>
+                    <th>III</th>
+                    <th>No.</th>
+                    <th>TCV</th>
+                    <th>HRIG</th>
+                    <th>ERIG</th>
+                    <th>D</th>
+                    <th>C</th>
+                    <th>O</th>
+                    <th>Total</th>
+                    <th>%TCV</th>
+                    <th>%ERIG</th>
+                    <th>Yes</th>
+                    <th>No</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in data %}
+                <tr>
+                    <th>{{ entry.barangay }}</th>
+                    <td>{{ entry.data_male }}</td> 
+                    <td>{{ entry.data_female }}</td> 
+                    <td>{{ entry.data_total }}</td> 
+                    <td>{{ entry.age_15_below }}</td> 
+                    <td>{{ entry.age_above_15 }}</td> 
+                    <td>{{ entry.age_total }}</td> 
+                    <td>{{ entry.total_animal_bite_I }}</td> 
+                    <td>{{ entry.total_animal_bite_II }}</td> 
+                    <td>{{ entry.total_animal_bite_III }}</td>
+                    <td>{{ entry.total_animal }}</td>
+                    <td>{{ entry.percent_total }}%</td>
+                    <td>{{ entry.human_rabies_count }}</td>
+                    <td>{{ entry.total_tcv_given }}</td>
+                    <td>{{ entry.total_hrig_given }}</td>
+                    <td>{{ entry.total_erig_given }}</td>
+                    <td>{{ entry.total_dog_bites }}</td>
+                    <td>{{ entry.total_cat_bites }}</td>
+                    <td>{{ entry.total_other_bites }}</td>
+                    <td>{{ entry.total_animal_bites }}</td>
+                    <td>{{ entry.percent_tcv  }}%</td>
+                    <td>{{ entry.percent_erig  }}%</td>
+                    <td>{{ entry.immunized_count }}</td>
+                    <td>{{ entry.unimmunized_count }}</td>
+
+                </tr>
+                {% endfor %}
+                <tr class="grey">
+                    <th>Total</th>
+                    <td>{{ total_male }}</td> 
+                    <td>{{ total_female }}</td> 
+                    <td class="highlightTotal">{{ total_all }}</td> 
+                    <td>{{ total_age_15_below }}</td> 
+                    <td>{{ total_age_above_15 }}</td> 
+                    <td class="highlightTotal">{{ total_age_15_below|add:total_age_above_15 }}</td>
+                    <td>{{ total_animal_bite_I }}</td> 
+                    <td>{{ total_animal_bite_II }}</td> 
+                    <td>{{ total_animal_bite_III }}</td>
+                    <td class="highlightTotal">{{ total_all }}</td> 
+                    <td>{{ total_percent }}%</td>
+                    <td>{{ total_human_rabies }}</td>
+                    <td>{{ total_tcv_given }}</td>
+                    <td>{{ total_hrig_given }}</td>
+                    <td>{{ total_rig_given }}</td>
+                    <td>{{ total_dog_bites }}</td>
+                    <td>{{ total_cat_bites }}</td>
+                    <td>{{ total_other_bites }}</td>
+                    <td class="highlightTotal">{{ total_dog_bites|add:total_cat_bites|add:total_other_bites }}</td>
+                    <td>{{ total_tcv_percent }}%</td>
+                    <td>{{ total_erig_percent }}%</td>
+                    <td>{{ total_immunized }}</td>
+                    <td>{{ total_unimmunized }}</td>
+                </tr>
+                <tr>
+                    <th>%</th>
+                    <td>{{ male_percentage }}%</td>
+                    <td>{{ female_percentage }}%</td>
+                    <td class="highlightTotal">{{ total_sex_percentage }}%</td> <!-- You can leave this blank or add total percentage if needed -->
+                    <td>{{ age_15_below_percentage }}%</td>
+                    <td>{{ age_above_15_percentage }}%</td>
+                    <td class="highlightTotal">{{ total_age_percentage }}%</td>
+                    <td>{{ total_animal_bite_I_percentage }}%</td>
+                    <td>{{ total_animal_bite_II_percentage }}%</td>
+                    <td>{{ total_animal_bite_III_percentage }}%</td>
+                    <td class="highlightTotal">{{ total_category_percentage }}%</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ dog_bite_percentage }}%</td>
+                    <td>{{ cat_bite_percentage }}%</td>
+                    <td>{{ other_bite_percentage }}%</td>
+                    <td class="highlightTotal">{{ total_animal_type_percentage }}%</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ immunized_percentage }}%</td>
+                    <td>{{ unimmunized_percentage }}%</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="signature-section mt-5">
+            <div class="signatures">
+                <div class="prepared">
+                    <p class="label">Prepared By:</p>
+                    <div class="signature-line">
+                        <span class="signature-name">{{ signature_name }}</span>
+                        <div class="line"></div>
+                    </div>
+                    <p class="signature-title">{{ coordinator }}</p>
+                </div>
+                <div class="noted">
+                    <p class="label">Noted By:</p>
+                    <div class="signature-line">
+                        <span class="signature-name">{{ doctor }}</span>
+                        <div class="line"></div>
+                    </div>
+                    <p class="signature-title">{{ pho }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    // Check session storage on page load to see if the form should be hidden
+    document.addEventListener("DOMContentLoaded", function() {
+        if (sessionStorage.getItem("formSubmitted")) {
+            document.getElementById("municipalityLogoForm").style.display = "none";
+        }
+    });
+
+    function submitAndHideForm() {
+        const form = document.getElementById("municipalityLogoForm");
+        form.submit();
+        sessionStorage.setItem("formSubmitted", "true");  // Set form submitted status
+        form.style.display = "none";  // Hides the form after submission
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,100 @@
+body{
+    padding-top: 70px;
+}
+
+.filter {
+    margin-top: 10px;
+}
+.custom-select {
+    border: 1px solid blue;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    margin-bottom: 15px; /* Add some spacing between the select and other elements */
+}
+.custom-select:hover, .custom-select:focus {
+    border-color: rgb(215, 215, 242);
+    background-color: rgb(254, 254, 254);
+    transform: scale(1.02);
+}
+.filter-btn {
+    background-color: #007bff;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+    margin-top: 15px; /* Add margin to push the button down */
+}
+.filter-btn:hover {
+    background-color: #0056b3;
+}
+.filter-btn:hover .btn-text {
+    transform: scale(1.1);
+}
+/* Add subtle shadows */
+.filter-container {
+    box-shadow: 0px 4px 12px rgba(11, 11, 11, 0.1);
+}
+/* Tooltip styling */
+[data-bs-toggle="tooltip"] {
+    cursor: pointer;
+    text-decoration:dotted;
+}
+.form-select, .filter-btn {
+    transition: all 0.2s ease-in-out;
+}
+.filter-btn:active {
+    transform: scale(0.98);
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 5px;
+}
+thead {
+    border-bottom: 1px solid blue; /* Blue bottom border for thead */
+}
+th {
+    padding: 2px;
+    text-align: center;
+    border: none; /* Remove all borders from th */
+}
+td {
+    padding: 8px;   
+}
+
+tbody th, tbody td {
+    border: none; /* Ensure no border for cells in tbody */
+    /* font-size: 16px !important; */
+    
+}
+/* .total-patients {
+    color: red;
+    font-weight: bold;
+} */
+
+/* .red-text {
+    color: rgb(159, 20, 20);
+    font-weight: bold; 
+} */
+.total {
+    border-top: 1px blue solid;
+}
+@media (max-width: 576px) {
+    .filter-container {
+        width: 100%; /* Full width on small screens */
+    }
+    #municipalitySelect,
+    #barangaySearch {
+        width: 100%; /* Make dropdown and input full width */
+    }
+}
+#barangaySearch {
+    border: 1px solid blue;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+#barangaySearch:hover, #barangaySearch:focus {
+    border-color: rgb(215, 215, 242);
+    background-color: rgb(254, 254, 254);
+    transform: scale(1.02);
+}

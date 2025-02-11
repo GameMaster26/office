@@ -1,0 +1,170 @@
+{% extends 'monitoring/base.html' %}
+
+{% load static %}
+
+{% block title %}
+Table
+{% endblock %}
+
+{% block style %}
+
+<link rel="stylesheet" href="{% static 'assets/css/table.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% include 'partials/_navlink.html' %} 
+    <div class="container filter mb-4 ms-5">
+        <div class="d-flex flex-column flex-md-row">
+            <div class="filter-container me-4 p-3 shadow-sm rounded" style="background-color: #ffffff;">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <label for="municipalitySelect" class="form-label d-flex align-items-center mb-2" style="font-weight: bold;">
+                        <i class="fas fa-paw" style="color: blue; margin-right: 6px;"></i> Select Municipality
+                    </label>
+                    <select id="municipalitySelect" name="municipality" class="form-select mb-2 p-1 custom-select" style="width: 150px; transition: all 0.3s ease;">
+                        <option value="ALL" {% if selected_municipality == "ALL" %}selected{% endif %}>ALL</option>
+                        {% for municipality in all_municipalities %}
+                            <option value="{{ municipality.muni_name }}" {% if selected_municipality == municipality.muni_name %}selected{% endif %}>{{ municipality.muni_name }}</option>
+                        {% endfor %}
+                    </select>
+                
+                    <!-- Barangay Search Input -->
+                    <input id="barangaySearch" name="barangay" type="text" class="form-control mb-3 p-1" 
+                           placeholder="Search Barangay..." style="width: 150px;"
+                           value="{{ barangay_search }}">  <!-- Retain the search value -->
+                
+                    <span class="mx-2 span-patient">
+                        Total Patients: 
+                        <span id="totalPatients" style="color: red; font-weight: bold;" data-bs-toggle="tooltip" title="Total reported cases for selected area">
+                            {{ total_patients }}
+                        </span>
+                    </span>
+                
+                    <button type="submit" class="btn btn-primary mt-2 filter-btn" style="position: relative; overflow: hidden;">
+                        <i class="fas fa-filter me-2"></i>
+                        <span class="btn-text" id="filterButton">Filter</span>
+                    </button>
+                </form>
+                
+            </div>
+    
+            <div class="table-container table-responsive flex-grow-1">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Municipality</th>
+                            <th>Barangay</th>
+                            <th>Total Patients</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if barangay_search %}
+                            <!-- Show search results for barangays matching the search term -->
+                            {% for record in barangay_summary %}
+                                <tr>
+                                    <td>{{ record.muni_name }}</td>
+                                    <td class="{% if record.total_patients > 0 %}{% endif %}">
+                                        {{ record.brgy_name }}
+                                    </td>
+                                    <td class="{% if record.total_patients > 0 %}{% endif %}">
+                                        {{ record.total_patients }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="total">
+                                <td><strong>Total</strong></td>
+                                <td><strong>{{ total_barangays }}</strong></td>
+                                <td class=""><strong>{{ total_patients }}</strong></td>
+                            </tr>
+                        {% elif selected_municipality == "ALL" %}
+                            <!-- Show municipality-level summary when "ALL" is selected -->
+                            {% for record in municipality_summary %}
+                                <tr>
+                                    <td>{{ record.muni_id__muni_name }}</td>
+                                    <td>{{ record.total_barangays }}</td>
+                                    <td>{{ record.total_cases }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="total">
+                                <td><strong>Total</strong></td>
+                                <td><strong>{{ total_barangays }}</strong></td>
+                                <td class=""><strong>{{ total_patients }}</strong></td>
+                            </tr>
+                        {% else %}
+                            <!-- Show barangay-level summary for selected municipality -->
+                            {% for record in barangay_summary %}
+                                <tr>
+                                    <td>{{ selected_municipality }}</td>
+                                    <td class="{% if record.total_patients > 0 %}{% endif %}">
+                                        {{ record.brgy_name }}
+                                    </td>
+                                    <td class="{% if record.total_patients > 0 %}{% endif %}">
+                                        {{ record.total_patients }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="total">
+                                <td><strong>Total</strong></td>
+                                <td><strong>{{ total_barangays }}</strong></td>
+                                <td class=""><strong>{{ total_patients }}</strong></td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>  
+{% endblock %}
+
+{% block script %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script>
+    document.getElementById('filterButton').addEventListener('click', function() {
+        const municipality = document.getElementById('municipalitySelect').value;
+        const barangay = document.getElementById('barangaySearch').value;
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = window.location.href;
+
+        const municipalityInput = document.createElement('input');
+        municipalityInput.type = 'hidden';
+        municipalityInput.name = 'municipality';
+        municipalityInput.value = municipality;
+
+        const barangayInput = document.createElement('input');
+        barangayInput.type = 'hidden';
+        barangayInput.name = 'barangay';
+        barangayInput.value = barangay;
+
+        form.appendChild(municipalityInput);
+        form.appendChild(barangayInput);
+        document.body.appendChild(form);
+        form.submit();
+    });
+</script>
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    // Smooth filter button animation
+    document.querySelector('.filter-btn').addEventListener('click', function() {
+        const btn = this;
+        const icon = btn.querySelector('img');
+        const text = btn.querySelector('.btn-text');
+
+        // Add temporary loading effect
+        text.textContent = "Filtering...";
+        icon.style.opacity = '0.7';
+        
+        setTimeout(function() {
+            text.textContent = "Filter"; // Reset button text after a brief period
+            icon.style.opacity = '0.2';
+        }, 1500);
+    });
+</script>
+{% endblock %}

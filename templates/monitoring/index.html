@@ -1,0 +1,456 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}
+Animal Bite and Rabies Monitoring System with GEO Mapping
+{% endblock %}
+
+{% block wrapper %}
+    <div id="wrapper">   
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <div class="container-fluid" id="nav-up">
+                        <div class="row">
+                            <!-- Display the total Patients -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <a href="javascript:void(0);" id="scrollToWeeklyCases" style="text-decoration: none;">
+                                    <div class="card border-left-primary h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                        Total Patient Cases</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_history }}</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-users fa-3x text-900"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- Display Municipality Name and Counts -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <a href="javascript:void(0);" id="scrollToMunicipality" style="text-decoration: none;">
+                                    <div class="card border-left-success h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                        Most Municipality of Exposure</div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800 text-success">
+                                                        {{ municipality.muni_id__muni_name }} ({{ municipality.count }} cases)
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i class="fas fa-map-marker-alt fa-3x text-900 text-success low-opacity"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Display Sex Name and Counts -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <a href="javascript:void(0);"  id="scrollToGender"  style="text-decoration: none;">
+                                    <div class="card border-left-info  h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                            
+                                                <div class="col mr-2">
+                                                    {% if gender_counts.sex %}
+                                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                        Most Frequent Sex
+                                                    </div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                        {{ gender_counts.sex|capfirst }} ({{ gender_counts.count }} cases)
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                        No data available
+                                                    </div>
+                                                    {% endif %}
+                                                    </div>
+                                                <div class="col-auto">
+                                                    {% if gender_counts.sex == "male" %}
+                                                        <i class="fas fa-male fa-3x text-300 text-info low-opacity"></i> <!-- Use male icon -->
+                                                    {% elif gender_counts.sex == "female" %}
+                                                        <i class="fas fa-female fa-3x text-300 text-info low-opacity"></i> <!-- Use female icon -->
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- Display the Animal that bites frequently -->
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <a href="javascript:void(0);" id="scrollToAnimal" style="text-decoration: none;">
+                                    <div class="card border-left-danger h-100 py-2">
+                                        <div class="card-body">
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col mr-2">
+                                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                        Most Frequent Animal Involved
+                                                    </div>
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                        {% if most_cases_animal %}
+                                                            {{ most_cases_animal.source_of_exposure }} ({{ most_cases_animal.count }} cases)
+                                                        {% else %}
+                                                            No data available
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    {% if most_cases_animal %}
+                                                        {% if most_cases_animal.source_of_exposure == 'Dog' %}
+                                                            <i class="fas fa-dog fa-3x text-900 text-danger low-opacity"></i>
+                                                        {% elif most_cases_animal.source_of_exposure == 'Cat' %}
+                                                            <i class="fas fa-cat fa-3x text-900 text-danger low-opacity"></i>
+                                                        {% else %}
+                                                            <i class="fas fa-question-circle fa-3x text-900 text-danger low-opacity"></i>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <i class="fas fa-question-circle fa-3x text-900 text-danger low-opacity"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.container-fluid -->
+                </div>
+                <!-- End of Main Content -->
+            </div>
+            <!-- End of Content Wrapper -->
+    </div>
+    {% endblock%}
+
+{% block content %}
+    <div class="container-fluid mt-2">
+        <div class="row mb-2 py-2">
+            <!-- Filter Section (Left Side) -->
+            <div class="col-md-3 col-sm-3 col-lg-3">
+                <div id="filterForm">
+                    <h5>Filter Data</h5>
+                    <form id="filterForm">
+                        <div class="input-group mb-3 rounded">
+                            <div class="input-group-text date-class" style="width: 60px; font-size: 12px;">Start</div>
+                            <input type="date" class="form-control" id="startDate" name="startDate" value="{{ request.GET.startDate }}">
+                        </div>
+                        <div class="input-group mb-3 rounded">
+                            <div class="input-group-text date-class" style="width: 60px; font-size: 12px;">End</div>
+                            <input type="date" class="form-control" id="endDate" name="endDate" value="{{ request.GET.endDate }}">
+                        </div>
+            
+                        <!-- Button aligned to the right -->
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" id="filterButton">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+                
+            <!-- Map Section (Right Side) -->
+            <div class="col-md-9 col-sm-9 col-lg-9 mb-4">
+                <div id="mama-container">
+                    <div id="mama"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row for the distribution of muni,patients and animals -->
+    <div class=" row">
+        <!-- Municipality Chart -->
+        <div class=" col-xl-6 col-lg-6" id="distributionMunicipality">
+            <div class="card  mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Distribution of Municipality</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="municipalityChart"></canvas>      
+                    </div>
+                </div>
+                <!-- <div class="card-body">
+                    <h2>Naval is the highest</h2>
+                </div> -->
+            </div>
+        </div>
+        <!-- Patients and Animals Chart -->
+        <div class=" col-xl-6 col-lg-6">
+            <div class="card mb-2">
+                <!-- Card Header -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Distribution of Patients and Animals</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body mt-4 mb-4 " id="scrollGender">
+                    <div class="row justify-content-center" >
+                        <div class="col-md-6 d-flex flex-column align-items-center border-right" >
+                            <h6 class="text-center">Sex Distribution</h6>
+                            <canvas id="genderChart"canvas>
+                        </div>
+                        <div class="col-md-6 d-flex flex-column align-items-center" id="scrollAnimal">
+                            <h6 class="text-center">Animal Source of Exposure</h6>
+                            <canvas id="animalChart"></canvas>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<!-- <script src="{% static 'assets/js/distribution.js' %}"></script> -->
+
+<div id="total-cases-data" data-total-cases="{{ total_cases|default:'0' }}"></div>
+<div id="total-rabies-data" data-rabies-cases="{{ total_rabies_cases|default:'0' }}"></div>
+<script id="heatmap-data" type="application/json">{{ heatmap_data|safe }}</script>
+<script id="rabies-heatmap-data" type="application/json">{{ rabies_heatmap_data|safe }}</script>
+<!-- <script id="choropleth_map_data" type="application/json">{{ choropleth_data|safe }}</script> -->
+{% endblock %}
+
+{% block chart %}
+    <div class="container-fluid mt-5" id="monthlyCasesScroll">
+        
+            <!-- Chart Options Buttons -->
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                    <div class="btn-group" role="group" aria-label="Chart options">
+                        <button type="button" class="btn btn-outline-primary" id="showWeekly">Weekly</button>
+                        <button type="button" class="btn btn-outline-primary" id="showMonthly">Monthly</button>
+                        <button type="button" class="btn btn-outline-primary" id="showQuarterly">Quarterly</button>
+                        <button type="button" class="btn btn-outline-primary" id="showAnnual">Annual</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Sections -->
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <!-- Monthly Cases Section -->
+                    <div class="card mb-2 chart-container" id="monthlyCasesSection">
+                        <div class="card-body">
+                            <h2 class="text-primary font-weight-bold">Monthly Cases</h2>
+                            <hr>
+                            <canvas id="monthlyCasesChart" class="canvasChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Weekly Cases Section -->
+                    <div class="card mb-2 chart-container" id="weeklyCasesSection" style="display: none;">
+                        <div class="card-body">
+                            <h2 class="text-primary font-weight-bold">Weekly Cases</h2>
+                            <hr>
+                            <canvas id="weeklyCasesChart" class="canvasChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Quarterly Cases Section -->
+                    <div class="card mb-2 chart-container" id="quarterlyCasesSection" style="display: none;">
+                        <div class="card-body">
+                            <h2 class="text-primary font-weight-bold">Quarterly Cases</h2>
+                            <hr>
+                            <canvas id="quarterlyCasesChart" class="canvasChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Annual Cases Section -->
+                    <div class="card mb-2 chart-container" id="annualCasesSection" style="display: none;">
+                        <div class="card-body">
+                            <h2 class="text-primary font-weight-bold">Annual Cases</h2>
+                            <hr>
+                            <canvas id="annualCasesChart" class="canvasChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+{% endblock%}
+
+{% block footer %}
+    <footer class="shadow py-4 mt-4">
+        <div class="footer-top">
+            <div class="container">
+                <!-- Province of Biliran Section with Green Background and Underline -->
+                <div class="mb-3 text-center" style="background-color: green;">
+                    <h5 class="font-weight-bold text-white " style="text-decoration: underline;">Province of Biliran</h5>
+                    <h6 class="text-white">Animal Bite Treatment Center (ABTC)</h6>
+                    <h6 class="text-white">CLINIC SCHEDULE</h6>
+                </div>
+        
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Table with Red Header Background -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-responsive table-striped text-center">
+                                <thead style="background-color: red; color: white;">
+                                    <tr>
+                                        <th>ABTC</th>
+                                        <th>ADDRESS</th>
+                                        <th>SCHEDULE</th>
+                                        <th>CONTACT PERSON</th>
+                                        <th>HOTLINE NUMBER</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="color: black;">
+                                    <tr>
+                                        <td class="font-weight-bold">Caibiran</td>
+                                        <td>RHU Caibiran,<br> Brgy. Palenque, Caibiran</td>
+                                        <td class="font-weight-bold">Monday and Thursday</td>
+                                        <td>Ms. Famela Verana</td>
+                                        <td>0917-124-8588</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Maripipi</td>
+                                        <td>RHU Maripipi,<br>Brgy. Ermita, Maripipi, Biliran</td>
+                                        <td class="font-weight-bold">Monday and Thursday</td>
+                                        <td>Mr. Sidney Gutierrez</td>
+                                        <td>0927-602-407</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Kawayan</td>
+                                        <td>RHU Kawayan,<br>Brgy.Poblacion,Kawayan,Biliran</td>
+                                        <td class="font-weight-bold">Tuesday and Friday</td>
+                                        <td>Ms. Ma. Queena Lynn Gonzales</td>
+                                        <td>0915-490-2732</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">Biliran Province Hospital</td>
+                                        <td>Biliran Province Hospital, <br>Castin St, Naval, Biliran</td>
+                                        <td class="font-weight-bold">Wednesday and Saturday</td>
+                                        <td>Ms. Melissa Astillo <br> Ms. Janice C. Horca</td>
+                                        <td>0915-490-2732</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="text-center mt-3">
+                    <p class="mb-0 footer1">For any inquiries, please contact the hotline numbers provided above.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock%}
+
+{% block script %}
+    <script src="{% static 'leaflet/js/main.js' %}"></script>
+    <script src="{% static 'leaflet/js/munichart.js' %}"></script>
+    <script src="{% static 'leaflet/js/indexMonthly.js' %}"></script>
+    <script>
+        // Pass data to the external script
+        const municipalities = {{ municipalities|safe }};
+        const municipalityCaseCounts = {{ municipality_case_counts|safe }};
+        const genderLabels = {{ gen|safe }};
+        const genderData = {{ dataGender|safe }};
+        const animalLabels = {{ animal|safe }};
+        const animalData = {{ dataAnimal|safe }};
+        
+        // Initialize charts
+        initMunicipalityChart(municipalities, municipalityCaseCounts);
+        initGenderChart(genderLabels, genderData);
+        initAnimalChart(animalLabels, animalData);
+    </script>
+    <script>
+        // Pass data to the external script
+        const days = {{ days|safe }};
+        const daily_case_counts = {{ daily_case_counts|safe }};
+        const weeks = {{ weeks|safe }};
+        const weekly_case_counts = {{ weekly_case_counts|safe }};
+        const months = {{ months|safe }};
+        const case_counts = {{ case_counts|safe }};
+
+        const quarters = {{ quarters|safe }};
+        const quarterly_case_counts = {{ quarterly_case_counts|safe }};
+        const years = {{ years|safe }};
+        const annual_case_counts = {{ annual_case_counts|safe }};
+        
+        // Initialize charts
+        initWeeklyChart(weeks, weekly_case_counts);
+        initMonthlyChart(months, case_counts);
+        initQuarterlyChart(quarters, quarterly_case_counts);
+        initAnnualChart(years, annual_case_counts);
+    </script>
+    <script>
+        //GenderScroll
+        document.getElementById('scrollToGender').addEventListener('click', function () {
+            document.getElementById('scrollGender').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest' 
+            });
+
+        });
+        //AnimalScroll
+        document.getElementById('scrollToAnimal').addEventListener('click', function () {
+            document.getElementById('scrollAnimal').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest'
+            });
+
+        });
+
+        //WeeklyScroll
+        document.getElementById('scrollToWeeklyCases').addEventListener('click', function () {
+            document.getElementById('monthlyCasesScroll').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center' 
+            });
+        });
+        //MuniScroll
+        document.getElementById('scrollToMunicipality').addEventListener('click', function () {
+            document.getElementById('distributionMunicipality').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center'
+            });
+
+        });
+
+        document.getElementById('showWeekly').addEventListener('click', function() {
+            document.getElementById('weeklyCasesSection').style.display = 'block';
+            document.getElementById('monthlyCasesSection').style.display = 'none';
+            document.getElementById('quarterlyCasesSection').style.display = 'none';
+            document.getElementById('annualCasesSection').style.display = 'none';
+        });
+
+        document.getElementById('showMonthly').addEventListener('click', function() {
+            document.getElementById('weeklyCasesSection').style.display = 'none';
+            document.getElementById('monthlyCasesSection').style.display = 'block';
+            document.getElementById('quarterlyCasesSection').style.display = 'none';
+            document.getElementById('annualCasesSection').style.display = 'none';
+        });
+
+        document.getElementById('showQuarterly').addEventListener('click', function() {
+            document.getElementById('weeklyCasesSection').style.display = 'none';
+            document.getElementById('monthlyCasesSection').style.display = 'none';
+            document.getElementById('quarterlyCasesSection').style.display = 'block';
+            document.getElementById('annualCasesSection').style.display = 'none';
+        });
+
+        document.getElementById('showAnnual').addEventListener('click', function() {
+            document.getElementById('weeklyCasesSection').style.display = 'none';
+            document.getElementById('monthlyCasesSection').style.display = 'none';
+            document.getElementById('quarterlyCasesSection').style.display = 'none';
+            document.getElementById('annualCasesSection').style.display = 'block';
+        });
+    </script>
+{% endblock %}
