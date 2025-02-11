@@ -112,12 +112,28 @@ DATABASES = {
 }
 
 
+""" GDAL_LIBRARY_PATH = os.getenv('GDAL_LIBRARY_PATH', None)
+GEOS_LIBRARY_PATH = os.getenv('GEOS_LIBRARY_PATH', None)
+
+# Optionally, raise an error if the environment variables are not set
+if not GDAL_LIBRARY_PATH or not GEOS_LIBRARY_PATH:
+    raise Exception("GDAL or GEOS library path is not set in the environment variables")
+
+# Set the paths for GDAL and GEOS libraries in the environment
+os.environ['GDAL_LIBRARY_PATH'] = GDAL_LIBRARY_PATH
+os.environ['GEOS_LIBRARY_PATH'] = GEOS_LIBRARY_PATH """
+
+
+
 """ GDAL_LIBRARY_PATH = os.path.join("C:\\", "OSGeo4W", "bin", "gdal309.dll")
 GEOS_LIBRARY_PATH = os.path.join("C:\\", "OSGeo4W", "bin", "geos_c.dll") """
 
 
-""" GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, "gdal", "gdal304.dll")
-GEOS_LIBRARY_PATH = os.path.join(BASE_DIR, "gdal", "geos_c.dll") """
+""" GDAL_LIBRARY_PATH = r"D:\office\Monitoring-System\tez\Lib\site-packages\osgeo\gdal.dll"
+GEOS_LIBRARY_PATH = r"D:\office\Monitoring-System\tez\Lib\site-packages\osgeo\geos_c.dll" """
+
+GDAL_LIBRARY_PATH = os.path.join(BASE_DIR, "gdal", "gdal304.dll")
+GEOS_LIBRARY_PATH = os.path.join(BASE_DIR, "gdal", "geos_c.dll")
 
 
 
