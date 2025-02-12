@@ -1,0 +1,28 @@
+# Use a lightweight Python image
+FROM python:3.9-slim
+
+# Install GDAL system dependencies
+RUN apt-get update && apt-get install -y \
+    gdal-bin \
+    libgdal-dev \
+    python3-gdal
+
+# Set GDAL environment variables
+ENV GDAL_DATA=/usr/share/gdal/ \
+    GDAL_DRIVER_PATH=/usr/lib/gdal/plugins/
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy requirements file and install dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy the entire project into the container
+COPY . .
+
+# Expose port 8000 for the application
+EXPOSE 8000
+
+# Run the application (Change to your actual start command)
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
